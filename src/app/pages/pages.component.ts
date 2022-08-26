@@ -8,5 +8,10 @@ import { Component, OnInit } from '@angular/core';
 export class PagesComponent implements OnInit {
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const themeElement = document.getElementById('theme');
+    const theme =
+      localStorage.getItem('theme') ?? './assets/css/colors/purple-dark.css';
+    themeElement?.setAttribute('href', theme);
+  }
 }
