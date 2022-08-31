@@ -8,6 +8,9 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class SidebarComponent implements OnInit {
   public menuItems!: any[];
+  get longitudSubmenu() {
+    return this.menuItems[0].submenu.length;
+  }
 
   constructor(private sidebarService: SidebarService) {
     this.menuItems = this.sidebarService.menu;

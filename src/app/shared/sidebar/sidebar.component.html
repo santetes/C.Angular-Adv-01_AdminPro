@@ -32,18 +32,23 @@
             ><i class="mdi mdi-gauge"></i
             ><span class="hide-menu"
               >{{ item.titulo }}
-              <span class="label label-rouded label-themecolor pull-right">{{
-                item.submenu.length
-              }}</span></span
-            ></a
-          >
+              <span class="label label-rouded label-themecolor pull-right"
+                >{{ longitudSubmenu | number }}
+              </span></span
+            >
+          </a>
           <ul
             *ngFor="let subitem of item.submenu"
             aria-expanded="false"
             class="collapse"
           >
             <li>
-              <a [routerLink]="subitem.url">{{ subitem.titulo }} </a>
+              <a
+                [routerLink]="subitem.url"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                >{{ subitem.titulo }}
+              </a>
             </li>
           </ul>
         </li>
