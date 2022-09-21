@@ -11,7 +11,9 @@
       <form
         class="form-horizontal form-material"
         id="loginform"
-        action="index.html"
+        autocomplete="off"
+        [formGroup]="registerForm"
+        (ngSubmit)="crearUsuario()"
       >
         <a href="javascript:void(0)" class="text-center db"
           ><img
@@ -25,6 +27,7 @@
         <div class="form-group m-t-20">
           <div class="col-xs-12">
             <input
+              formControlName="nombre"
               class="form-control"
               type="text"
               required=""
@@ -35,6 +38,7 @@
         <div class="form-group">
           <div class="col-xs-12">
             <input
+              formControlName="email"
               class="form-control"
               type="text"
               required=""
@@ -45,6 +49,7 @@
         <div class="form-group">
           <div class="col-xs-12">
             <input
+              formControlName="password"
               class="form-control"
               type="password"
               required=""
@@ -55,6 +60,7 @@
         <div class="form-group">
           <div class="col-xs-12">
             <input
+              formControlName="password2"
               class="form-control"
               type="password"
               required=""
@@ -65,13 +71,32 @@
         <div class="form-group row">
           <div class="col-md-12">
             <div class="checkbox checkbox-primary p-t-0">
-              <input id="checkbox-signup" type="checkbox" />
+              <input
+                formControlName="terminos"
+                id="checkbox-signup"
+                type="checkbox"
+              />
               <label for="checkbox-signup">
                 I agree to all <a href="#">Terms</a></label
               >
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col text-danger">
+            <p *ngIf="campoNoValido('nombre')">El nombre es obligatorio</p>
+            <p *ngIf="campoNoValido('email')">El email es obligatorio</p>
+            <p *ngIf="campoNoValido('password')">
+              El password tiene que tener 6 letras
+            </p>
+            <p *ngIf="aceptaTerminos()">Debe aceptar los términos</p>
+            <p *ngIf="campoNoValido('password2')">
+              Las contraseñas tinen que ser iguales
+            </p>
+          </div>
+        </div>
+
         <div class="form-group text-center m-t-20">
           <div class="col-xs-12">
             <button
@@ -86,9 +111,7 @@
           <div class="col-sm-12 text-center">
             <p>
               Already have an account?
-              <a href="pages-login-2.html" class="text-info m-l-5"
-                ><b>Sign In</b></a
-              >
+              <a routerLink="/login" class="text-info m-l-5"><b>Sign In</b></a>
             </p>
           </div>
         </div>

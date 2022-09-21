@@ -9,9 +9,11 @@
   <div class="login-box card">
     <div class="card-body">
       <form
-        (submit)="login()"
         class="form-horizontal form-material"
         id="loginform"
+        [formGroup]="loginForm"
+        (ngSubmit)="login()"
+        autocomplete="off"
       >
         <a href="javascript:void(0)" class="text-center db"
           ><img src="./assets/images/logo-icon.png" alt="Home" /><br /><img
@@ -24,7 +26,8 @@
               class="form-control"
               type="text"
               required=""
-              placeholder="Username"
+              placeholder="Email"
+              formControlName="email"
             />
           </div>
         </div>
@@ -35,6 +38,7 @@
               type="password"
               required=""
               placeholder="Password"
+              formControlName="password"
             />
           </div>
         </div>
@@ -45,6 +49,7 @@
                 id="checkbox-signup"
                 type="checkbox"
                 class="filled-in chk-col-light-blue"
+                formControlName="remember"
               />
               <label for="checkbox-signup"> Remember me </label>
             </div>
@@ -57,6 +62,14 @@
           </div>
         </div>
         <div class="form-group text-center m-t-20">
+          <div class="row">
+            <div class="col text-danger">
+              <p *ngIf="campoNoValido('email')">Debe indicar un email válido</p>
+              <p *ngIf="campoNoValido('password')">
+                Debe indicar una contraseña
+              </p>
+            </div>
+          </div>
           <div class="col-xs-12">
             <button
               class="btn btn-info btn-lg btn-block text-uppercase btn-rounded"
@@ -71,14 +84,6 @@
             <div class="social">
               <a
                 href="javascript:void(0)"
-                class="btn btn-facebook"
-                data-toggle="tooltip"
-                title="Login with Facebook"
-              >
-                <i aria-hidden="true" class="fa fa-facebook"></i>
-              </a>
-              <a
-                href="javascript:void(0)"
                 class="btn btn-googleplus"
                 data-toggle="tooltip"
                 title="Login with Google"
@@ -91,7 +96,7 @@
         <div class="form-group m-b-0">
           <div class="col-sm-12 text-center">
             Don't have an account?
-            <a href="pages-register2.html" class="text-primary m-l-5"
+            <a routerLink="/register" class="text-primary m-l-5"
               ><b>Sign Up</b></a
             >
           </div>
