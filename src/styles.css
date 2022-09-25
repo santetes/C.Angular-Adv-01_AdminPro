@@ -6,6 +6,7 @@
   animation-fill-mode: both;
 }
 
-#themecolors > li > a {
+#themecolors > li > a,
+.pointer {
   cursor: pointer;
 }

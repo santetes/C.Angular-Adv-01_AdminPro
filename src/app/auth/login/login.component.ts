@@ -1,15 +1,25 @@
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  ViewChild,
+  NgZone,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario.service';
+
+declare const google: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
+  @ViewChild('googleBtn') googleBtn!: ElementRef;
+
   private formSubmited: boolean = false;
 
   public loginForm: FormGroup = this.fb.group({
@@ -24,8 +34,35 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private ngZone: NgZone
   ) {}
+
+  ngAfterViewInit() {
+    this.googleInit();
+  }
+
+  googleInit() {
+    google.accounts.id.initialize({
+      client_id:
+        '1077067861633-8ef1n0sin1nvj07ggmfeda0mu38gsuce.apps.googleusercontent.com',
+      callback: (response: any) => this.handleCredentialResponse(response), //hay que tener cuidado con el uso del this en los callback
+    });
+    google.accounts.id.renderButton(
+      this.googleBtn.nativeElement,
+      { theme: 'outline', size: 'large' } // customization attributes
+    );
+  }
+
+  handleCredentialResponse(response: any) {
+    this.usuarioService.loginGoogle(response.credential).subscribe((resp) => {
+      //La utilización de ngZOne hace que se navegue correctamente cuando se utilizan librerias de terceros (google) - sino no cargaria correctamente la página
+
+      this.ngZone.run(() => {
+        this.router.navigateByUrl('/');
+      });
+    });
+  }
 
   login() {
     this.formSubmited = true;
@@ -41,10 +78,9 @@ export class LoginComponent {
     }
 
     this.usuarioService.loginUsuario(this.loginForm.value).subscribe({
-      next: (resp) => console.log(resp),
+      next: (resp) => this.router.navigateByUrl('/'),
       error: (err) => Swal.fire('Error', err.error.msg, 'error'),
     });
-    //this.router.navigateByUrl('/');
   }
 
   campoNoValido(campo: string): boolean {
