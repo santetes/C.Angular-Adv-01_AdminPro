@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
-import { filter, map, Subscription } from 'rxjs';
+import { filter, map, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-breadcrumbs',

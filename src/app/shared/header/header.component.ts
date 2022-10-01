@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { UsuarioService } from 'src/app/services/usuario.service';
-import { Router } from '@angular/router';
+import { Usuario } from '../../models/usuario.model';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +8,10 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class HeaderComponent {
-  constructor(private usuarioService: UsuarioService) {}
+  public usuario!: Usuario;
+  constructor(private usuarioService: UsuarioService) {
+    this.usuario = this.usuarioService.usuario;
+  }
 
   logOut() {
     this.usuarioService.logOut();

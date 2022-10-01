@@ -9,7 +9,7 @@ export class SettingsService {
   constructor() {
     const theme =
       localStorage.getItem('theme') ?? './assets/css/colors/purple-dark.css';
-    this.themeElement?.setAttribute('href', theme);
+    this.themeElement!.setAttribute('href', theme);
   }
 
   changeTheme(color: string) {

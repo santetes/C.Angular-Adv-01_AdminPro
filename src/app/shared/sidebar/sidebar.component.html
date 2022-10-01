@@ -12,14 +12,22 @@
             class="has-arrow waves-effect waves-dark"
             href="#"
             aria-expanded="false"
-            ><img src="./assets/images/users/profile.png" alt="user" /><span
-              class="hide-menu"
-              >Steave Jobs
+            ><img [src]="imgUrl" alt="user" /><span class="hide-menu"
+              >{{ nombre }}
             </span></a
           >
           <ul aria-expanded="false" class="collapse">
-            <li><a routerLink="account-settings">Account Setting</a></li>
-            <li><a routerLink="/login">Logout</a></li>
+            <li>
+              <a routerLink="profile" routerLinkActive="active">Profile</a>
+            </li>
+            <li>
+              <a routerLink="account-settings" routerLinkActive="active"
+                >Account Setting</a
+              >
+            </li>
+            <li>
+              <a routerLink="/login" (click)="logOut()">Logout</a>
+            </li>
           </ul>
         </li>
         <li class="nav-devider"></li>
