@@ -10,3 +10,9 @@
 .pointer {
   cursor: pointer;
 }
+
+/* ajuste tamaño imagen perfil en avatar */
+.imagenPerfil {
+  width: 120px;
+  height: 120px;
+}

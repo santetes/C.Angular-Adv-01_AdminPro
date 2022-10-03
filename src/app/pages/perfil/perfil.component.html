@@ -31,6 +31,7 @@
                 class="form-control"
                 id="exampleInputEmail1"
                 placeholder="Enter email"
+                [readOnly]="usuario.google"
               />
             </div>
           </div>
@@ -52,15 +53,34 @@
       <div class="card-body">
         <h4 class="card-title">Avatar</h4>
         <h6 class="card-subtitle">Imagen del usuario</h6>
-        <img [src]="usuario.imagenUrl" alt="Imagen Usuario" />
+        <div class="text-center">
+          <img
+            *ngIf="!imagenTemp"
+            [src]="usuario.imagenUrl"
+            alt="Imagen Usuario"
+            class="imagenPerfil animate__animated animate__fadeIn"
+          />
+          <img
+            *ngIf="imagenTemp"
+            [src]="imagenTemp"
+            alt=""
+            class="imagenPerfil animate__animated animate__fadeIn"
+          />
+        </div>
         <br />
         <br />
-        <input class="form-control" type="file" />
+        <input
+          class="form-control"
+          type="file"
+          (change)="cambiarImagen($event)"
+        />
         <br />
         <br />
         <button
           type="button"
           class="btn btn-success waves-effect waves-light m-r-10"
+          (click)="subirImagen()"
+          [disabled]="!imagenSubir"
         >
           <i class="fa fa-save"></i>
           Cambiar imagen

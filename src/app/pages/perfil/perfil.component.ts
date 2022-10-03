@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UsuarioService } from '../../services/usuario.service';
-import { Usuario } from '../../models/usuario.model';
 import Swal from 'sweetalert2';
+import { UsuarioService } from '../../services/usuario.service';
+import { FileUploadService } from '../../services/file-upload.service';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-perfil',
@@ -12,7 +13,14 @@ import Swal from 'sweetalert2';
 export class PerfilComponent implements OnInit {
   public profileForm!: FormGroup;
   public usuario!: Usuario;
-  constructor(private fb: FormBuilder, private usuarioService: UsuarioService) {
+  public imagenSubir!: File;
+  public imagenTemp: any = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService,
+    private fileUploadService: FileUploadService
+  ) {
     this.usuario = this.usuarioService.usuario;
   }
 
@@ -20,6 +28,7 @@ export class PerfilComponent implements OnInit {
     this.profileForm = this.fb.group({
       nombre: [this.usuario.nombre, Validators.required],
       email: [this.usuario.email, [Validators.required, Validators.email]],
+      archivo: [''],
     });
   }
 
@@ -47,5 +56,32 @@ export class PerfilComponent implements OnInit {
         });
       },
     });
+  }
+
+  cambiarImagen(event: any) {
+    this.imagenSubir = event.target.files[0];
+    if (!this.imagenSubir) {
+      this.imagenTemp = null;
+      return;
+    }
+    // Este bloque de código permite visualizar una imagen directamente desde la carga del archivo (windows) sin ser la imagen del propio modelo de usuario
+    const reader = new FileReader();
+    reader.readAsDataURL(this.imagenSubir);
+    reader.onloadend = () => (this.imagenTemp = reader.result);
+  }
+
+  subirImagen() {
+    this.fileUploadService
+      .actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.uid!)
+      .then((nombreNuevaImagen) => {
+        this.usuario.img = nombreNuevaImagen;
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Tu avatar ha sido actualizado correctamente',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
   }
 }

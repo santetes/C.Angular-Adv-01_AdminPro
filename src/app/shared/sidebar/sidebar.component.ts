@@ -10,7 +10,6 @@ import { Usuario } from '../../models/usuario.model';
 })
 export class SidebarComponent {
   public menuItems!: any[];
-  public imgUrl: string = '';
   public usuario!: Usuario;
 
   get longitudSubmenu() {
@@ -21,12 +20,15 @@ export class SidebarComponent {
     return this.usuario.nombre;
   }
 
+  get imagen() {
+    return this.usuario.imagenUrl;
+  }
+
   constructor(
     private sidebarService: SidebarService,
     private usuarioService: UsuarioService
   ) {
     this.menuItems = this.sidebarService.menu;
-    this.imgUrl = usuarioService.usuario.imagenUrl;
     this.usuario = usuarioService.usuario;
   }
 
