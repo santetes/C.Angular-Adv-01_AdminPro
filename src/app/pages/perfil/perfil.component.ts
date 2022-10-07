@@ -34,6 +34,7 @@ export class PerfilComponent implements OnInit {
 
   actualizarPerfil() {
     const data = this.profileForm.value;
+
     this.usuarioService.actualizarUsuario(data).subscribe({
       next: (res) => {
         Swal.fire({
@@ -49,6 +50,7 @@ export class PerfilComponent implements OnInit {
         this.usuario.email = email;
       },
       error: (err) => {
+        console.log(err);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',

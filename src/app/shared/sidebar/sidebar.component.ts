@@ -12,10 +12,6 @@ export class SidebarComponent {
   public menuItems!: any[];
   public usuario!: Usuario;
 
-  get longitudSubmenu() {
-    return this.menuItems[0].submenu.length;
-  }
-
   get nombre() {
     return this.usuario.nombre;
   }
@@ -30,6 +26,10 @@ export class SidebarComponent {
   ) {
     this.menuItems = this.sidebarService.menu;
     this.usuario = usuarioService.usuario;
+  }
+
+  longitudSubmenu(index: number) {
+    return this.menuItems[index].submenu.length;
   }
 
   logOut() {

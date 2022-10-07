@@ -26,7 +26,7 @@ export class UsuarioService {
   logOut() {
     localStorage.removeItem('x-token');
 
-    google.accounts.id.revoke('sanmartgon@gmail.com', () => {
+    google.accounts.id.revoke(this.usuario.email, () => {
       this.ngZone.run(() => {
         //La utilización de ngZOne hace que se navegue correctamente cuando se utilizan librerias de terceros (google) - sino no cargaria correctamente la página
         this.router.navigateByUrl('/login');
@@ -48,14 +48,10 @@ export class UsuarioService {
   actualizarUsuario(data: { nombre: string; email: string }) {
     const token = localStorage.getItem('x-token') || '';
 
-    return this.http.put(
-      `${base_url}/usuarios/${this.usuario.uid}`,
-      { ...data, role: 'USER_ROLE' },
-      {
-        headers: { 'x-token': token },
-        observe: 'response',
-      }
-    );
+    return this.http.put(`${base_url}/usuarios/${this.usuario.uid}`, data, {
+      headers: { 'x-token': token },
+      observe: 'response',
+    });
   }
 
   loginUsuario(formData: loginForm) {
@@ -96,5 +92,41 @@ export class UsuarioService {
 
         catchError((err) => of(false))
       );
+  }
+
+  cargarUsuarios(desde: number = 0) {
+    const token = localStorage.getItem('x-token') || '';
+    return this.http
+      .get(`${base_url}/usuarios?desde=${desde}`, {
+        headers: { 'x-token': token },
+        observe: 'response',
+      })
+      .pipe(
+        // convierto cada objeto con información de usuario en una instancia de tipo usuario para poder acceder al método get imagenUrl
+        map((resp: any) => {
+          const usuarios = resp.body.usuarios.map(
+            (user: any) =>
+              new Usuario(
+                user.nombre,
+                user.email,
+                '',
+                user.img,
+                user.google,
+                user.uid,
+                user.role
+              )
+          );
+
+          return { usuarios, total: resp.body.total };
+        })
+      );
+  }
+
+  borrarUsuario(usuario: Usuario) {
+    const token = localStorage.getItem('x-token') || '';
+    return this.http.delete(`${base_url}/usuarios/${usuario.uid}`, {
+      headers: { 'x-token': token },
+      observe: 'response',
+    });
   }
 }

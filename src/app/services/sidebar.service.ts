@@ -16,6 +16,15 @@ export class SidebarService {
         { titulo: 'Observables', url: 'rxjs' },
       ],
     },
+    {
+      titulo: 'Mantenimiento',
+      icono: 'mdi mdi-screwdriver',
+      submenu: [
+        { titulo: 'Usuarios', url: 'usuarios' },
+        { titulo: 'Hospitales', url: 'hospitales' },
+        { titulo: 'Médicos', url: 'medicos' },
+      ],
+    },
   ];
 
   constructor() {}
