@@ -35,7 +35,7 @@ export class PerfilComponent implements OnInit {
   actualizarPerfil() {
     const data = this.profileForm.value;
 
-    this.usuarioService.actualizarUsuario(data).subscribe({
+    this.usuarioService.actualizarUsuario(data, this.usuario.uid!).subscribe({
       next: (res) => {
         Swal.fire({
           position: 'center',

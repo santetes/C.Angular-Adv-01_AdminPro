@@ -48,7 +48,8 @@
                   <img
                     [src]="usuario.imagenUrl"
                     alt="avatar"
-                    class="imagenPerfil-mini"
+                    class="imagenPerfil-mini pointer"
+                    (click)="abrirModal(usuario)"
                   />
                 </td>
                 <td>{{ usuario.email }}</td>

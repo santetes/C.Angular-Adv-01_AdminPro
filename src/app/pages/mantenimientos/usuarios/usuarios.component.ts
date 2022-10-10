@@ -1,30 +1,54 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import Swal from 'sweetalert2';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from '../../../services/usuario.service';
 import { BusquedasService } from '../../../services/busquedas.service';
-import { catchError } from 'rxjs';
+import { catchError, Subscription } from 'rxjs';
+import { ModalImagenService } from '../../../services/modal-imagen.service';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
   styles: [],
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, OnDestroy {
   public usuarios: Usuario[] = [];
   public usuariosTemp: Usuario[] = [];
   public total: number = 0;
   public desde: number = 0;
   public cargando: boolean = true;
 
+  private subsCambioImagen!: Subscription;
+
   @ViewChild('textoEntrada') textoEntrada!: ElementRef;
 
   constructor(
     private usuarioService: UsuarioService,
-    private busquedaService: BusquedasService
+    private busquedaService: BusquedasService,
+    private modalImageService: ModalImagenService
   ) {}
 
   ngOnInit(): void {
+    this.cargarUsuarios();
+
+    this.subsCambioImagen = this.modalImageService.imagenCambiada.subscribe(
+      (mombreImagen) => {
+        this.cargarUsuarios();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subsCambioImagen.unsubscribe();
+  }
+
+  cargarUsuarios() {
     this.usuarioService.cargarUsuarios(this.desde).subscribe((res: any) => {
       this.total = res.total;
       this.usuarios = res.usuarios;
@@ -42,7 +66,6 @@ export class UsuariosComponent implements OnInit {
         this.usuariosTemp = res.usuarios;
         this.cargando = false;
       });
-      console.log(this.desde);
     }
   }
   anterior() {
@@ -106,5 +129,21 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  actualizarRole(usuario: Usuario) {}
+  actualizarRole(usuario: Usuario) {
+    const data = {
+      nombre: usuario.nombre,
+      email: usuario.email,
+      role: usuario.role,
+    };
+    this.usuarioService
+      .actualizarUsuario(data, usuario.uid!)
+      .subscribe((resp) => console.log(resp));
+  }
+
+  abrirModal(usuario: Usuario) {
+    // si no existe imagen en usuario esta seria undefined y provocaria error. por eso se utiliza Nullish coalescing operator para proteger esto
+
+    usuario.img = usuario.img || 'no-image';
+    this.modalImageService.abrirModal('usuarios', usuario.img, usuario.uid);
+  }
 }

@@ -45,10 +45,17 @@ export class UsuarioService {
       .pipe(tap((res: any) => localStorage.setItem('x-token', res.body.token)));
   }
 
-  actualizarUsuario(data: { nombre: string; email: string }) {
+  actualizarUsuario(
+    data: {
+      nombre?: string;
+      email?: string;
+      role?: string;
+    },
+    uid: string
+  ) {
     const token = localStorage.getItem('x-token') || '';
 
-    return this.http.put(`${base_url}/usuarios/${this.usuario.uid}`, data, {
+    return this.http.put(`${base_url}/usuarios/${uid}`, data, {
       headers: { 'x-token': token },
       observe: 'response',
     });
